@@ -1,0 +1,5 @@
+{
+  "name": "Rapidoss",
+  "description": "Application de Logistique et Livraison à la Demande",
+  "requestFramePermissions": ["geolocation"]
+}

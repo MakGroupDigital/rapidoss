@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur d'icônes Rapidoss</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 40px;
+      background: #121212;
+      color: white;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #29BA1F;
+      margin-bottom: 30px;
+    }
+    .icon-preview {
+      display: flex;
+      gap: 30px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+    .icon-item {
+      text-align: center;
+    }
+    canvas {
+      border: 2px solid #29BA1F;
+      border-radius: 12px;
+      background: white;
+    }
+    button {
+      background: linear-gradient(135deg, #098C04, #29BA1F);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 10px 5px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .instructions {
+      background: rgba(41, 186, 31, 0.1);
+      border: 1px solid rgba(41, 186, 31, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Générateur d'icônes Rapidoss</h1>
+    
+    <div class="icon-preview">
+      <div class="icon-item">
+        <h3>192x192</h3>
+        <canvas id="icon192" width="192" height="192"></canvas>
+        <br>
+        <button onclick="downloadIcon('icon192', 'icon-192.png')">Télécharger</button>
+      </div>
+      
+      <div class="icon-item">
+        <h3>512x512</h3>
+        <canvas id="icon512" width="512" height="512"></canvas>
+        <br>
+        <button onclick="downloadIcon('icon512', 'icon-512.png')">Télécharger</button>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>📝 Instructions</h3>
+      <ol>
+        <li>Cliquez sur les boutons "Télécharger" pour sauvegarder les icônes</li>
+        <li>Placez les fichiers téléchargés dans le dossier <code>public/</code></li>
+        <li>Les icônes seront automatiquement utilisées par l'application</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const scale = size / 512;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Background hexagon
+      ctx.fillStyle = '#0B2928';
+      drawHexagon(ctx, size/2, size/2, size/2.2, 0);
+      ctx.fill();
+
+      // Gradient hexagon - Plus grand
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#098C04');
+      gradient.addColorStop(1, '#29BA1F');
+      ctx.fillStyle = gradient;
+      drawHexagon(ctx, size/2, size/2, size/2.5, 0);
+      ctx.fill();
+
+      // Lightning bolt - Plus grand et plus épais
+      ctx.fillStyle = '#121212';
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 8 * scale;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const boltSize = size / 3.2;
+
+      ctx.beginPath();
+      ctx.moveTo(centerX + boltSize * 0.25, centerY - boltSize * 0.9);
+      ctx.lineTo(centerX - boltSize * 0.5, centerY);
+      ctx.lineTo(centerX, centerY);
+      ctx.lineTo(centerX - boltSize * 0.35, centerY + boltSize * 0.9);
+      ctx.lineTo(centerX + boltSize * 0.6, centerY + boltSize * 0.1);
+      ctx.lineTo(centerX + boltSize * 0.1, centerY + boltSize * 0.1);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    function drawHexagon(ctx, x, y, radius, rotation) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i + rotation;
+        const px = x + radius * Math.cos(angle);
+        const py = y + radius * Math.sin(angle);
+        if (i === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.closePath();
+    }
+
+    function downloadIcon(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Generate icons on load
+    window.onload = function() {
+      drawIcon(document.getElementById('icon192'));
+      drawIcon(document.getElementById('icon512'));
+    };
+  </script>
+</body>
+</html>

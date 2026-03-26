@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background hexagonal -->
+  <path d="M256 0L480 128V384L256 512L32 384V128L256 0Z" fill="#0B2928"/>
+  
+  <!-- Gradient overlay -->
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#098C04;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#29BA1F;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Inner hexagon - Plus grand -->
+  <path d="M256 40L440 144V368L256 472L72 368V144L256 40Z" fill="url(#grad1)"/>
+  
+  <!-- Lightning bolt icon - Plus grand et plus épais -->
+  <path d="M290 140L190 280H250L225 420L325 280H265L290 140Z" fill="#121212" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="180" height="180" rx="40" fill="#0B2928"/>
+  
+  <!-- Gradient -->
+  <defs>
+    <linearGradient id="appleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#098C04;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#29BA1F;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Hexagon - Plus grand -->
+  <path d="M90 20L160 60V120L90 160L20 120V60L90 20Z" fill="url(#appleGrad)"/>
+  
+  <!-- Lightning - Plus grand et plus épais -->
+  <path d="M105 50L65 100H90L80 140L120 100H95L105 50Z" fill="#121212" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
