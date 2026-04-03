@@ -20,3 +20,4 @@ coverage/
 out/
 dist/
 build/
+.env*.local
