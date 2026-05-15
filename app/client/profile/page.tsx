@@ -1,9 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import ClientSubpage from '@/components/ClientSubpage';
-import { IcoUser, IcoPhone, IcoPin, IcoShield, IcoStar, IcoCheck, IcoHistory } from '@/components/Icons';
+import { IcoUser, IcoPhone, IcoPin, IcoShield, IcoStar, IcoCheck, IcoHistory, IcoLogout } from '@/components/Icons';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import { logout } from '@/lib/user-profile';
 
 const fy = (i = 0) => ({
   initial: { opacity: 0, y: 14 },
@@ -12,6 +14,7 @@ const fy = (i = 0) => ({
 });
 
 export default function ClientProfilePage() {
+  const router = useRouter();
   const { isLoading, isAuthorized, profile } = useProtectedRoute('client');
 
   if (isLoading || !isAuthorized) {
@@ -29,6 +32,11 @@ export default function ClientProfilePage() {
     { icon: IcoPin, label: 'Adresse', value: location },
     { icon: IcoHistory, label: 'Compte', value: profile?.onboardingCompleted ? 'Profil complété' : 'À finaliser' },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/');
+  };
 
   return (
     <ClientSubpage
@@ -98,6 +106,16 @@ export default function ClientProfilePage() {
           </motion.div>
         ))}
       </div>
+
+      <motion.button
+        {...fy(profileRows.length + 2)}
+        type="button"
+        onClick={handleLogout}
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-500/20 bg-[#1a1a1a] p-4 text-sm font-bold text-red-400 transition-colors hover:border-red-500/35"
+      >
+        <IcoLogout size={18} />
+        Déconnexion
+      </motion.button>
     </ClientSubpage>
   );
 }

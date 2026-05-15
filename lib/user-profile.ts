@@ -4,6 +4,7 @@ import {
   getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
+  signInWithPopup,
   signInWithRedirect,
   signOut,
   type User,
@@ -106,8 +107,22 @@ function clearCachedProfile(uid: string) {
 }
 
 export async function signInWithGoogle() {
-  await signInWithRedirect(auth, googleProvider);
-  return { result: null, mode: 'redirect' as const };
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return { result, mode: 'popup' as const };
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request')
+    ) {
+      await signInWithRedirect(auth, googleProvider);
+      return { result: null, mode: 'redirect' as const };
+    }
+
+    throw error;
+  }
 }
 
 export async function resolveGoogleRedirect() {

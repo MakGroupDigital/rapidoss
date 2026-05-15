@@ -16,6 +16,36 @@ import {
 
 type Step = 'splash' | 'login' | 'role';
 
+function getAuthErrorMessage(error: unknown) {
+  if (typeof error !== 'object' || error === null || !('code' in error)) {
+    return error instanceof Error ? error.message : "Connexion Google impossible pour l'instant.";
+  }
+
+  const code = String(error.code);
+
+  if (code === 'auth/unauthorized-domain') {
+    return "Domaine non autorisé dans Firebase Auth. Ajoutez ce domaine dans Firebase Console > Authentication > Settings > Authorized domains.";
+  }
+
+  if (code === 'auth/popup-closed-by-user') {
+    return 'Fenêtre Google fermée avant la fin de la connexion.';
+  }
+
+  if (code === 'auth/popup-blocked') {
+    return 'Popup Google bloquée par le navigateur. Autorisez les popups ou réessayez.';
+  }
+
+  if (code === 'auth/operation-not-allowed') {
+    return 'Google Sign-In n’est pas activé dans Firebase Authentication.';
+  }
+
+  if (code === 'auth/network-request-failed') {
+    return 'Connexion réseau impossible. Vérifiez internet puis réessayez.';
+  }
+
+  return `${error instanceof Error ? error.message : 'Connexion Google impossible.'} (${code})`;
+}
+
 export default function Onboarding() {
   const [step, setStep] = useState<Step>('splash');
   const [isBusy, setIsBusy] = useState(false);
@@ -111,8 +141,7 @@ export default function Onboarding() {
       return;
     } catch (err) {
       console.error('[Auth] Google sign-in error:', err);
-      const errorMsg = err instanceof Error ? err.message : "Connexion Google impossible pour l'instant.";
-      setError(errorMsg);
+      setError(getAuthErrorMessage(err));
     } finally {
       setIsBusy(false);
     }
