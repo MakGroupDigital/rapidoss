@@ -69,6 +69,14 @@ function drawText(ctx: CanvasRenderingContext2D, text: string, x: number, y: num
   ctx.fillText(value, x, y, maxWidth);
 }
 
+async function loadRapidossLogo() {
+  try {
+    return await loadImage('/icone-rapidoss.png');
+  } catch {
+    return null;
+  }
+}
+
 export function createOrderDocumentNumber(type: OrderDocumentType) {
   const prefix = type === 'receipt' ? 'REC' : 'FAC';
   const date = new Date();
@@ -112,6 +120,7 @@ export async function generateOrderDocumentImage(input: OrderDocumentInput) {
     },
   });
   const qrImage = await loadImage(qrDataUrl);
+  const logoImage = await loadRapidossLogo();
 
   ctx.fillStyle = '#121212';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -132,12 +141,26 @@ export async function generateOrderDocumentImage(input: OrderDocumentInput) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
+  drawRoundedRect(ctx, 78, 78, 54, 54, 16);
+  ctx.fillStyle = '#0B2928';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(41,186,31,0.38)';
+  ctx.stroke();
+
+  if (logoImage) {
+    ctx.drawImage(logoImage, 88, 88, 34, 34);
+  } else {
+    ctx.fillStyle = '#29BA1F';
+    ctx.font = '900 26px system-ui, sans-serif';
+    ctx.fillText('R', 96, 115);
+  }
+
   ctx.fillStyle = '#29BA1F';
   ctx.font = '900 34px system-ui, sans-serif';
-  ctx.fillText('Rapidoss', 78, 112);
+  ctx.fillText('Rapidoss', 146, 112);
   ctx.font = '800 12px system-ui, sans-serif';
   ctx.letterSpacing = '0px';
-  ctx.fillText('LOGISTIQUE A LA DEMANDE', 80, 136);
+  ctx.fillText('LOGISTIQUE A LA DEMANDE', 148, 136);
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '900 30px system-ui, sans-serif';

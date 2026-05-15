@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import PWAInstallGate from '@/components/PWAInstallGate';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className="font-sans">
       <body suppressHydrationWarning className="bg-[#121212] text-white antialiased selection:bg-[#29BA1F] selection:text-[#121212]">
         {children}
+        <PWAInstallGate />
       </body>
     </html>
   );

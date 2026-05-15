@@ -1,22 +1,40 @@
+const CACHE_NAME = 'rapidoss-shell-v1';
+const SHELL_ASSETS = [
+  '/',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icone-rapidoss.png',
+];
+
 self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS)),
+  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    (async () => {
-      const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
-
-      const registrations = await self.registration.scope ? [self.registration] : [];
-      await Promise.all(registrations.map((registration) => registration.unregister()));
-
-      const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-      clients.forEach((client) => client.navigate(client.url));
-    })()
+    caches.keys().then((keys) => (
+      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+    )),
   );
+  self.clients.claim();
 });
 
-self.addEventListener('fetch', () => {
-  // No-op on purpose: this worker exists only to replace and remove stale localhost registrations.
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+        return response;
+      })
+      .catch(() => caches.match(event.request).then((cached) => cached || caches.match('/'))),
+  );
 });
