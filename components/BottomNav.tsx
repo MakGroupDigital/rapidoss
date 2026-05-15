@@ -39,7 +39,7 @@ export default function BottomNav({ role }: { role: 'client' | 'driver' }) {
 
   return (
     /* Conteneur positionné */
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-5 px-4 pointer-events-none">
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-5 px-3 pointer-events-none">
 
       {/* Halo de fond */}
       <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent pointer-events-none" />
@@ -49,7 +49,7 @@ export default function BottomNav({ role }: { role: 'client' | 'driver' }) {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'spring', damping: 22, stiffness: 180, delay: 0.1 }}
-        className="relative pointer-events-auto flex items-center gap-1 rounded-[2rem] px-2 py-2"
+        className="relative pointer-events-auto flex w-full max-w-md items-center justify-between gap-1 rounded-[2rem] px-2 py-2"
         style={{
           background: 'linear-gradient(135deg, rgba(26,26,26,0.95) 0%, rgba(18,18,18,0.98) 100%)',
           border: '1px solid rgba(41,186,31,0.18)',
@@ -71,8 +71,7 @@ export default function BottomNav({ role }: { role: 'client' | 'driver' }) {
                 key={item.id}
                 whileTap={{ scale: 0.88 }}
                 onClick={() => router.push(item.path)}
-                className="relative mx-1 flex items-center justify-center"
-                style={{ width: 56, height: 56 }}
+                className="relative mx-1 flex h-14 w-14 flex-shrink-0 items-center justify-center"
               >
                 {/* Glow */}
                 <motion.div
@@ -101,8 +100,7 @@ export default function BottomNav({ role }: { role: 'client' | 'driver' }) {
               key={item.id}
               whileTap={{ scale: 0.88 }}
               onClick={() => router.push(item.path)}
-              className="relative flex flex-col items-center justify-center gap-0.5 rounded-[1.4rem] transition-all"
-              style={{ width: 60, height: 56, padding: '6px 4px' }}
+              className="relative flex h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[1.4rem] px-1 py-1.5 transition-all"
             >
               {/* Fond actif */}
               <AnimatePresence>
