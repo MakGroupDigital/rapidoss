@@ -74,6 +74,12 @@
 
 .custom-marker-blue { transition: transform 0.2s; }
 .custom-marker-blue:hover { transform: scale(1.1); }
+.rapidoss-driver-marker {
+  background: transparent;
+  border: 0;
+  transition: transform 0.18s ease;
+}
+.rapidoss-driver-marker:hover { transform: scale(1.08); }
 
 /* Tiles sombres */
 .map-tiles-dark {

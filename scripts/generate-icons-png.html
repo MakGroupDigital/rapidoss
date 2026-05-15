@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapidoss - Icon Generator</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #121212;
+      color: white;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #29BA1F;
+      margin-bottom: 30px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    .icon-box {
+      background: #1a1a1a;
+      border: 1px solid #29BA1F;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .icon-box h2 {
+      margin-top: 0;
+      color: #29BA1F;
+      font-size: 18px;
+    }
+    canvas {
+      border: 1px solid #29BA1F;
+      border-radius: 8px;
+      background: white;
+      margin: 15px 0;
+      max-width: 100%;
+    }
+    button {
+      background: linear-gradient(to right, #29BA1F, #098C04);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    button:active {
+      opacity: 0.8;
+    }
+    .info {
+      background: #0B2928;
+      border-left: 3px solid #29BA1F;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 15px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .success {
+      background: #0B2928;
+      color: #29BA1F;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Rapidoss Icon Generator</h1>
+  
+  <div class="container">
+    <!-- Icon 192x192 -->
+    <div class="icon-box">
+      <h2>Icon 192x192</h2>
+      <canvas id="canvas192" width="192" height="192"></canvas>
+      <button onclick="downloadIcon(192)">Télécharger 192x192</button>
+      <div class="info">
+        Pour: PWA, Manifest, Favicon
+      </div>
+    </div>
+
+    <!-- Icon 512x512 -->
+    <div class="icon-box">
+      <h2>Icon 512x512</h2>
+      <canvas id="canvas512" width="512" height="512"></canvas>
+      <button onclick="downloadIcon(512)">Télécharger 512x512</button>
+      <div class="info">
+        Pour: PWA, Manifest, Splash Screen
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #0B2928; border: 1px solid #29BA1F; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+    <h3 style="margin-top: 0; color: #29BA1F;">Instructions</h3>
+    <ol style="line-height: 1.8;">
+      <li>Cliquez sur les boutons pour télécharger les icônes PNG</li>
+      <li>Placez les fichiers dans le dossier <code>public/</code>:
+        <ul>
+          <li><code>public/icon-192.png</code></li>
+          <li><code>public/icon-512.png</code></li>
+        </ul>
+      </li>
+      <li>Rechargez l'application</li>
+      <li>Les icônes s'afficheront correctement dans le manifest PWA</li>
+    </ol>
+  </div>
+
+  <script>
+    // SVG Icon Data
+    const svgData = `
+      <svg width="SIZE" height="SIZE" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background hexagonal -->
+        <path d="M256 0L480 128V384L256 512L32 384V128L256 0Z" fill="#0B2928"/>
+        
+        <!-- Gradient overlay -->
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#098C04;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#29BA1F;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        
+        <!-- Inner hexagon -->
+        <path d="M256 40L440 144V368L256 472L72 368V144L256 40Z" fill="url(#grad1)"/>
+        
+        <!-- Lightning bolt icon -->
+        <path d="M290 140L190 280H250L225 420L325 280H265L290 140Z" fill="#121212" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      
+      // Clear canvas
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, size, size);
+      
+      // Create SVG image
+      const svg = svgData.replace(/SIZE/g, size);
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      
+      const img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, size, size);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }
+
+    function downloadIcon(size) {
+      const canvasId = `canvas${size}`;
+      const canvas = document.getElementById(canvasId);
+      
+      // Convert canvas to blob and download
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `icon-${size}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        // Show success message
+        const box = canvas.closest('.icon-box');
+        const success = document.createElement('div');
+        success.className = 'success';
+        success.textContent = `✓ icon-${size}.png téléchargé!`;
+        box.appendChild(success);
+        setTimeout(() => success.remove(), 3000);
+      }, 'image/png');
+    }
+
+    // Draw icons on load
+    window.addEventListener('load', function() {
+      drawIcon('canvas192', 192);
+      drawIcon('canvas512', 512);
+    });
+  </script>
+</body>
+</html>

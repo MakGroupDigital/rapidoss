@@ -13,14 +13,14 @@ import {
   updateDoc,
   doc,
   deleteDoc,
-} from 'firebase/firestore';
+} from '@firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-} from 'firebase/auth';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+} from '@firebase/auth';
+import { ref, uploadBytes, getDownloadURL } from '@firebase/storage';
 import { auth, db, storage } from './firebase';
 
 // ============ AUTHENTIFICATION ============

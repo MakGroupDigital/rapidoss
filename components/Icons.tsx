@@ -406,6 +406,47 @@ export const IcoOrderCTA = ({ size = 22, className = '' }: IconProps) => (
   </svg>
 );
 
+/* ── Vehicle icons for drivers ── */
+export const IcoCar = ({ size = 22, className = '' }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <path d="M18 8h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2z" />
+    <circle cx="7" cy="16" r="1" fill="currentColor" />
+    <circle cx="17" cy="16" r="1" fill="currentColor" />
+    <path d="M6 10h12" />
+  </svg>
+);
+
+export const IcoTruck = ({ size = 22, className = '' }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <path d="M14 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10v12z" />
+    <path d="M14 4h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-6" />
+    <circle cx="6" cy="18" r="2" fill="currentColor" />
+    <circle cx="18" cy="18" r="2" fill="currentColor" />
+  </svg>
+);
+
+export const IcoBicycle = ({ size = 22, className = '' }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <circle cx="6" cy="18" r="3" />
+    <circle cx="18" cy="18" r="3" />
+    <path d="M12 13v5" />
+    <path d="M9 5h6" />
+    <path d="M12 5v8" />
+    <path d="M6 18h12" />
+  </svg>
+);
+
+export const IcoTricycle = ({ size = 22, className = '' }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <circle cx="5" cy="18" r="2" fill="currentColor" />
+    <circle cx="19" cy="18" r="2" fill="currentColor" />
+    <circle cx="12" cy="18" r="2" fill="currentColor" />
+    <path d="M12 13v3" />
+    <path d="M9 5h6" />
+    <path d="M12 5v8" />
+  </svg>
+);
+
 /* ── Google icon (onboarding) ── */
 export const IcoGoogle = ({ size = 22, className = '' }: { size?: number; className?: string }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" className={className}>

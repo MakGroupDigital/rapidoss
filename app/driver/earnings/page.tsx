@@ -1,26 +1,69 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
 import BottomNav from '@/components/BottomNav';
 import { IcoWallet, IcoZap, IcoStar, IcoCard, IcoCash, IcoArrowUp } from '@/components/Icons';
 import { motion } from 'motion/react';
+import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import { subscribeToCompletedDriverOrders, type DeliveryOrder } from '@/lib/orders';
 
-const wallet = {
-  balance: '342,500 FC',
-  cardNumber: '4532 **** **** 8901',
-  holder: 'Jean Mukendi',
-  expiry: '12/26',
-  trips: 23,
-  rating: 4.8,
-};
+function formatAmount(amount: number) {
+  return new Intl.NumberFormat('fr-CD').format(amount);
+}
 
-const recentTransactions = [
-  { id: 'TRX-001', date: '26 Mars', type: 'Gain', amount: '+12,500 FC', trips: 5 },
-  { id: 'TRX-002', date: '25 Mars', type: 'Retrait', amount: '-50,000 FC', trips: null },
-  { id: 'TRX-003', date: '25 Mars', type: 'Gain', amount: '+18,200 FC', trips: 7 },
-  { id: 'TRX-004', date: '24 Mars', type: 'Gain', amount: '+15,800 FC', trips: 6 },
-];
+function getOrderDate(order: DeliveryOrder) {
+  if (typeof order.createdAt === 'object' && order.createdAt && 'seconds' in order.createdAt) {
+    return new Date(Number(order.createdAt.seconds) * 1000);
+  }
+
+  return null;
+}
 
 export default function DriverEarningsPage() {
+  const { isLoading, isAuthorized, profile } = useProtectedRoute('driver');
+  const [completedOrders, setCompletedOrders] = useState<DeliveryOrder[]>([]);
+
+  useEffect(() => {
+    if (!profile?.uid) {
+      return;
+    }
+
+    return subscribeToCompletedDriverOrders(profile.uid, profile.fullName, setCompletedOrders);
+  }, [profile?.fullName, profile?.uid]);
+
+  const wallet = useMemo(() => {
+    const balance = completedOrders.reduce((sum, order) => sum + order.price, 0);
+
+    return {
+      balance: `${formatAmount(balance)} FC`,
+      cardNumber: '4532 **** **** 8901',
+      holder: profile?.fullName ?? 'Livreur Rapidoss',
+      expiry: '12/26',
+      trips: completedOrders.length,
+      rating: 4.8,
+    };
+  }, [completedOrders, profile?.fullName]);
+
+  const recentTransactions = useMemo(() => (
+    completedOrders.slice(0, 4).map((order) => {
+      const date = getOrderDate(order);
+
+      return {
+        id: order.id,
+        date: date
+          ? new Intl.DateTimeFormat('fr-CD', { day: 'numeric', month: 'long' }).format(date)
+          : 'Date indisponible',
+        type: 'Gain',
+        amount: `+${formatAmount(order.price)} FC`,
+        trips: 1,
+      };
+    })
+  ), [completedOrders]);
+
+  if (isLoading || !isAuthorized) {
+    return <div className="min-h-screen bg-[#121212]" />;
+  }
+
   return (
     <main className="min-h-screen bg-[#121212] pb-28 text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#29BA1F22,transparent_35%),linear-gradient(180deg,#0B2928_0%,#0B0B0B_65%)] pointer-events-none" />
